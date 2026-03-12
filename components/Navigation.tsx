@@ -36,17 +36,6 @@ export default function Navigation() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
-          {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <Image
-              src="/logo.png"
-              alt="Safty"
-              width={50}
-              height={50}
-              className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
-            />
-          </Link>
-
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
@@ -85,9 +74,20 @@ export default function Navigation() {
                 </span>
               )}
             </Link>
+
+            {/* Logo - à droite */}
+            <Link href="/" className="flex items-center ml-4">
+              <Image
+                src="/logo.png"
+                alt="Safty"
+                width={60}
+                height={60}
+                className="w-12 h-12 sm:w-14 sm:h-14 object-contain"
+              />
+            </Link>
           </div>
 
-          {/* Mobile: Cart + Burger */}
+          {/* Mobile: Cart + Burger + Logo */}
           <div className="flex items-center gap-3 md:hidden">
             <Link
               href="/cart"
@@ -134,6 +134,15 @@ export default function Navigation() {
                 )}
               </svg>
             </button>
+            <Link href="/" className="flex items-center">
+              <Image
+                src="/logo.png"
+                alt="Safty"
+                width={48}
+                height={48}
+                className="w-10 h-10 object-contain"
+              />
+            </Link>
           </div>
         </div>
       </div>

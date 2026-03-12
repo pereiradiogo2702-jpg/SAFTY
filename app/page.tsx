@@ -77,7 +77,7 @@ export default function Home() {
               width={400}
               height={400}
               priority
-              className="w-60 h-60 sm:w-80 sm:h-80 lg:w-[22rem] lg:h-[22rem] object-contain drop-shadow-[0_0_60px_rgba(224,123,57,0.35)]"
+              className="w-72 h-72 sm:w-96 sm:h-96 lg:w-[28rem] lg:h-[28rem] object-contain drop-shadow-[0_0_80px_rgba(224,123,57,0.4)]"
             />
           </motion.div>
 
