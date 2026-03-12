@@ -16,10 +16,10 @@ const countryEmojis: Record<string, string> = {
 const flavorWords = ['Maracujá', 'Açaï', 'Yuzu', 'Bissap', 'Tamarindo', 'Guaraná', 'Hibiscus', 'Mangue', 'Papaye', 'Goyave', 'Camu Camu', 'Tamarin'];
 
 const cans = [
-  { src: '/cans/can-1.png', name: 'Lady Red', flavor: 'Blueberry & Strawberry' },
-  { src: '/cans/can-2.png', name: 'Lady White', flavor: 'Blueberry & Strawberry' },
-  { src: '/cans/can-3.png', name: 'Maria', flavor: 'Orange & Figue' },
-  { src: '/cans/can-4.png', name: 'Maria New', flavor: 'Orange & Figue' },
+  { src: '/cans/bottle.png', name: 'Safty 1', flavor: 'Fresh & Natural' },
+  { src: '/cans/bottle.png', name: 'Safty 2', flavor: 'Fresh & Natural' },
+  { src: '/cans/bottle.png', name: 'Safty 3', flavor: 'Fresh & Natural' },
+  { src: '/cans/bottle.png', name: 'Safty 4', flavor: 'Fresh & Natural' },
 ];
 
 export default function Home() {
@@ -34,7 +34,6 @@ export default function Home() {
   });
   const heroLogoScale = useTransform(heroProgress, [0, 0.5], [1, 1.3]);
   const heroLogoY = useTransform(heroProgress, [0, 1], [0, -150]);
-  const heroTextY = useTransform(heroProgress, [0, 1], [0, 120]);
   const heroOpacity = useTransform(heroProgress, [0, 0.5], [1, 0]);
   const heroBgY = useTransform(heroProgress, [0, 1], [0, 150]);
   const marqueeY = useTransform(heroProgress, [0, 1], [0, 80]);
@@ -102,32 +101,7 @@ export default function Home() {
             />
           </motion.div>
 
-          <motion.div style={{ y: heroTextY, opacity: heroOpacity }}>
-            <motion.h1
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.4 }}
-              className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 leading-[1.1] tracking-tight"
-            >
-              Les saveurs du monde
-              <br />
-              <span className="bg-gradient-to-r from-[var(--primary-light)] to-[var(--warm)] bg-clip-text text-transparent">
-                dans votre verre
-              </span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-base sm:text-lg text-gray-300/90 mb-8 max-w-2xl mx-auto leading-relaxed"
-            >
-              Chaque jus raconte l&apos;histoire d&apos;un pays. Retrouvez les saveurs
-              de chez vous, peu importe où vous êtes dans le monde.
-            </motion.p>
-          </motion.div>
-
-          {/* ── 4 CANS - Aligned left to right ── */}
+          {/* ── 4 BOTTLES - Aligned left to right ── */}
           <motion.div
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
