@@ -1,12 +1,11 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef, useState, useCallback, useEffect } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { featuredProducts, countries } from '@/lib/products';
 import { useCartStore } from '@/store/cartStore';
-import ProductShowcase from '@/components/ProductShowcase';
 
 const countryEmojis: Record<string, string> = {
   'Portugal': '🇵🇹', 'Brésil': '🇧🇷', 'Cap-Vert': '🇨🇻', 'Angola': '🇦🇴',
@@ -21,7 +20,6 @@ const saftyProducts = [
     image: '/cans/bottle.png',
     description: 'Notre jus signature aux fruits frais, un melange parfait de saveurs tropicales.',
     color: '#4CAF50',
-    bgColor: '#E8F5E9',
     tags: ['Naturel', 'Vitamine C', 'Sans sucre ajouté'],
   },
   {
@@ -30,7 +28,6 @@ const saftyProducts = [
     image: '/cans/bottle.png',
     description: 'Un voyage exotique avec mangue, passion et ananas. Fraicheur garantie.',
     color: '#FF9800',
-    bgColor: '#FFF3E0',
     tags: ['Exotique', 'Antioxydants', 'Bio'],
   },
   {
@@ -39,7 +36,6 @@ const saftyProducts = [
     image: '/cans/bottle.png',
     description: 'Boost d\'énergie naturelle avec gingembre, citron et pomme verte.',
     color: '#8BC34A',
-    bgColor: '#F1F8E9',
     tags: ['Énergie', 'Gingembre', 'Detox'],
   },
   {
@@ -48,7 +44,6 @@ const saftyProducts = [
     image: '/cans/bottle.png',
     description: 'Explosion de baies: myrtille, framboise et açai pour un plaisir intense.',
     color: '#9C27B0',
-    bgColor: '#F3E5F5',
     tags: ['Baies', 'Oméga-3', 'Premium'],
   },
 ];
@@ -59,6 +54,47 @@ export default function Home() {
   const conceptRef = useRef<HTMLElement>(null);
   const countriesRef = useRef<HTMLElement>(null);
 
+  // Modal state
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const isOpen = selectedIndex !== null;
+  const selected = selectedIndex !== null ? saftyProducts[selectedIndex] : null;
+
+  const openModal = useCallback((index: number) => {
+    setSelectedIndex(index);
+    document.body.style.overflow = 'hidden';
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setSelectedIndex(null);
+    document.body.style.overflow = '';
+  }, []);
+
+  const navigate = useCallback((dir: -1 | 1) => {
+    if (selectedIndex === null) return;
+    setSelectedIndex((selectedIndex + dir + saftyProducts.length) % saftyProducts.length);
+  }, [selectedIndex]);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (!isOpen) return;
+      if (e.key === 'Escape') closeModal();
+      if (e.key === 'ArrowLeft') navigate(-1);
+      if (e.key === 'ArrowRight') navigate(1);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [isOpen, closeModal, navigate]);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    setMousePos({
+      x: ((e.clientX - cx) / cx) * 12,
+      y: ((e.clientY - cy) / cy) * -8,
+    });
+  }, []);
+
   const { scrollYProgress: heroProgress } = useScroll({
     target: heroRef,
     offset: ['start start', 'end start'],
@@ -67,7 +103,6 @@ export default function Home() {
   const heroLogoY = useTransform(heroProgress, [0, 1], [0, -150]);
   const heroOpacity = useTransform(heroProgress, [0, 0.5], [1, 0]);
   const heroBgY = useTransform(heroProgress, [0, 1], [0, 150]);
-
 
   const { scrollYProgress: conceptProgress } = useScroll({
     target: conceptRef,
@@ -85,7 +120,7 @@ export default function Home() {
     <div className="min-h-screen overflow-x-hidden">
 
       {/* ═══════════════════════════════════════════════
-          HERO - Full screen with bg image, marquee, floating fruits
+          HERO
           ═══════════════════════════════════════════════ */}
       <section ref={heroRef} className="relative min-h-screen flex flex-col justify-center overflow-hidden">
         {/* Background Image with parallax */}
@@ -112,6 +147,39 @@ export default function Home() {
               priority
               className="w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 object-contain drop-shadow-[0_0_80px_rgba(224,123,57,0.45)]"
             />
+          </motion.div>
+
+          {/* ── 4 BOTTLES ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="flex items-end justify-center gap-6 sm:gap-10 lg:gap-14 mb-10 w-full"
+          >
+            {saftyProducts.map((product, index) => (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: 100 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1 + index * 0.15, type: 'spring', bounce: 0.3 }}
+                whileHover={{ y: -40, x: -10, scale: 1.15, rotate: -3, transition: { type: 'tween', duration: 0.15, ease: 'easeOut' } }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => openModal(index)}
+                className="relative cursor-pointer group w-[28vw] sm:w-[22vw] lg:w-[18vw] max-w-[280px]"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-auto object-contain drop-shadow-[0_15px_40px_rgba(0,0,0,0.5)] group-hover:drop-shadow-[0_30px_60px_rgba(224,123,57,0.5)] transition-[filter] duration-200"
+                />
+                <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-150 whitespace-nowrap">
+                  <span className="text-white text-xs sm:text-sm font-semibold bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                    {product.name}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
           </motion.div>
 
           {/* Buttons */}
@@ -155,17 +223,148 @@ export default function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════════
-          NOS SAVEURS - ProductShowcase
+          MODAL - Full screen 3D product view
           ═══════════════════════════════════════════════ */}
-      <section className="py-16 sm:py-24 bg-[var(--cream)]">
-        <h2 className="text-center text-3xl sm:text-5xl lg:text-6xl font-bold text-[var(--secondary)] mb-2">
-          Nos Saveurs
-        </h2>
-        <p className="text-center text-gray-400 text-sm mb-4">
-          Cliquez sur une cannette pour la découvrir
-        </p>
-        <ProductShowcase products={saftyProducts} />
-      </section>
+      <AnimatePresence>
+        {isOpen && selected && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-[9999] flex items-center justify-center"
+            onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}
+            onMouseMove={handleMouseMove}
+          >
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0"
+              style={{
+                background: `radial-gradient(ellipse at 35% 50%, ${selected.color}dd, ${selected.color}99 40%, rgba(20,15,12,0.97) 80%)`,
+              }}
+            />
+
+            {/* Close button */}
+            <button
+              onClick={closeModal}
+              className="absolute top-6 right-6 z-20 w-12 h-12 rounded-full border border-white/15 bg-white/5 backdrop-blur-xl flex items-center justify-center text-white hover:bg-white/15 hover:rotate-90 hover:scale-110 transition-all duration-300 cursor-pointer"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+
+            {/* Arrows */}
+            <button
+              onClick={(e) => { e.stopPropagation(); navigate(-1); }}
+              className="absolute left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full border border-white/12 bg-white/5 backdrop-blur-xl flex items-center justify-center text-white hover:bg-white/15 hover:scale-110 transition-all duration-300 cursor-pointer"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); navigate(1); }}
+              className="absolute right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full border border-white/12 bg-white/5 backdrop-blur-xl flex items-center justify-center text-white hover:bg-white/15 hover:scale-110 transition-all duration-300 cursor-pointer"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 6 15 12 9 18" />
+              </svg>
+            </button>
+
+            {/* Content */}
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 max-w-[1100px] w-full px-8 pt-16 md:pt-0">
+              {/* Big can with 3D tilt */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.3, rotateY: 15 }}
+                animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+                exit={{ opacity: 0, scale: 0.5 }}
+                transition={{ duration: 0.6, type: 'spring', bounce: 0.2 }}
+                className="relative flex-shrink-0"
+                style={{
+                  transform: `perspective(1000px) rotateY(${mousePos.x}deg) rotateX(${mousePos.y}deg)`,
+                }}
+              >
+                <div
+                  className="absolute -inset-[40%] rounded-full blur-[80px] opacity-35 -z-10"
+                  style={{ background: selected.color }}
+                />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={selected.image}
+                  alt={selected.name}
+                  className="w-[120px] sm:w-[180px] md:w-[220px] h-auto object-contain drop-shadow-[0_40px_80px_rgba(0,0,0,0.35)]"
+                />
+              </motion.div>
+
+              {/* Details */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="text-white max-w-[380px] text-center md:text-left flex-shrink-0"
+              >
+                <span className="text-[0.7rem] tracking-[0.25em] uppercase text-white/45 mb-3 block">SAFTY</span>
+                <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight mb-4 tracking-tight">
+                  {selected.name}
+                </h2>
+                <p className="text-white/65 text-sm sm:text-base leading-relaxed mb-6">
+                  {selected.description}
+                </p>
+                <div className="flex flex-wrap gap-2 mb-8 justify-center md:justify-start">
+                  {selected.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-3.5 py-1.5 rounded-full text-xs font-medium text-white/85 border border-white/10 bg-white/5 backdrop-blur-sm"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <button
+                  onClick={() => {
+                    addItem({
+                      id: selected.id,
+                      name: selected.name,
+                      price: 4.99,
+                      quantity: 1,
+                      image: selected.image,
+                      country: 'Monde',
+                    });
+                    closeModal();
+                  }}
+                  className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-bold text-sm uppercase tracking-wider cursor-pointer hover:brightness-110 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+                  style={{ background: selected.color, color: '#1a1210' }}
+                >
+                  Ajouter au panier
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </button>
+              </motion.div>
+            </div>
+
+            {/* Nav dots */}
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+              {saftyProducts.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={(e) => { e.stopPropagation(); setSelectedIndex(i); }}
+                  className={`w-2.5 h-2.5 rounded-full border-none cursor-pointer transition-all duration-300 ${
+                    selectedIndex === i ? 'bg-white scale-150' : 'bg-white/20 hover:bg-white/50'
+                  }`}
+                />
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ═══════════════════════════════════════════════
           CONCEPT - Features with parallax
@@ -231,10 +430,9 @@ export default function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════════
-          FEATURED PRODUCTS - With flavor marquee
+          FEATURED PRODUCTS
           ═══════════════════════════════════════════════ */}
       <section className="py-24 sm:py-36 bg-white relative overflow-hidden">
-        {/* Decorative blobs */}
         <div className="absolute top-0 right-0 w-[40rem] h-[40rem] bg-[var(--primary)]/5 rounded-full blur-[150px] -translate-y-1/2 translate-x-1/3" />
         <div className="absolute bottom-0 left-0 w-[30rem] h-[30rem] bg-[var(--accent)]/5 rounded-full blur-[120px] translate-y-1/3 -translate-x-1/3" />
 
@@ -338,7 +536,7 @@ export default function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════════
-          COUNTRIES - Glass cards with marquee
+          COUNTRIES
           ═══════════════════════════════════════════════ */}
       <section ref={countriesRef} className="py-24 sm:py-36 bg-gradient-to-b from-[#0f2027] via-[#203a43] to-[#2c5364] overflow-hidden relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -389,7 +587,7 @@ export default function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════════
-          CTA - With marquee and gradient
+          CTA
           ═══════════════════════════════════════════════ */}
       <section className="py-24 sm:py-32 bg-gradient-to-br from-[var(--primary)] via-[var(--primary-dark)] to-[#a14520] overflow-hidden relative">
         <div className="absolute inset-0">
