@@ -101,41 +101,35 @@ export default function Home() {
             />
           </motion.div>
 
-          {/* ── 4 BOTTLES - Aligned left to right ── */}
+          {/* ── 4 BOTTLES - Big, centered ── */}
           <motion.div
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="flex items-end justify-center gap-3 sm:gap-6 lg:gap-10 mb-10 w-full max-w-4xl"
+            className="flex items-end justify-center gap-4 sm:gap-8 lg:gap-12 mb-10 w-full"
           >
             {cans.map((can, index) => (
               <motion.div
                 key={can.name}
-                initial={{ opacity: 0, y: 80 }}
+                initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 1 + index * 0.15, type: 'spring', bounce: 0.3 }}
-                whileHover={{ y: -30, x: -8, scale: 1.08, rotate: -2 }}
-                className="relative cursor-pointer group flex-1 max-w-[22%]"
+                transition={{ duration: 0.8, delay: 1 + index * 0.15, type: 'spring', bounce: 0.3 }}
+                whileHover={{ y: -35, x: -10, scale: 1.12, rotate: -3 }}
+                className="relative cursor-pointer group w-[20vw] sm:w-[18vw] lg:w-[14vw] max-w-[220px]"
               >
-                <div className="relative">
-                  <Image
-                    src={can.src}
-                    alt={can.name}
-                    width={300}
-                    height={450}
-                    className="w-full h-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.4)] group-hover:drop-shadow-[0_25px_50px_rgba(224,123,57,0.4)] transition-all duration-500"
-                  />
-                  {/* Glow effect on hover */}
-                  <div className="absolute inset-0 rounded-2xl bg-[var(--primary)]/0 group-hover:bg-[var(--primary)]/5 transition-all duration-500" />
-                </div>
+                <Image
+                  src={can.src}
+                  alt={can.name}
+                  width={400}
+                  height={600}
+                  className="w-full h-auto object-contain drop-shadow-[0_15px_40px_rgba(0,0,0,0.5)] group-hover:drop-shadow-[0_30px_60px_rgba(224,123,57,0.5)] transition-all duration-500"
+                />
                 {/* Label on hover */}
-                <motion.div
-                  className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap"
-                >
+                <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
                   <span className="text-white text-xs sm:text-sm font-semibold bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-full">
                     {can.flavor}
                   </span>
-                </motion.div>
+                </div>
               </motion.div>
             ))}
           </motion.div>
