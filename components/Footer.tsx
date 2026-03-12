@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 const footerLinks = {
   navigation: [
@@ -31,8 +32,13 @@ export default function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <span className="text-3xl">🍊</span>
-              <span className="text-2xl font-bold">SAFTY</span>
+              <Image
+                src="/logo.png"
+                alt="Safty"
+                width={50}
+                height={50}
+                className="w-12 h-12 object-contain"
+              />
             </div>
             <p className="text-gray-300 text-sm leading-relaxed">
               Des saveurs authentiques du monde entier, pour se sentir chez soi

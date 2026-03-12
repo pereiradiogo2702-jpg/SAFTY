@@ -1,7 +1,9 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { featuredProducts, countries } from '@/lib/products';
 import { useCartStore } from '@/store/cartStore';
 
@@ -23,72 +25,102 @@ const countryEmojis: Record<string, string> = {
 
 export default function Home() {
   const addItem = useCartStore((state) => state.addItem);
+  const heroRef = useRef<HTMLElement>(null);
+  const countriesRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress: heroProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  });
+  const heroLogoScale = useTransform(heroProgress, [0, 0.5], [1, 1.4]);
+  const heroLogoY = useTransform(heroProgress, [0, 1], [0, -120]);
+  const heroTextY = useTransform(heroProgress, [0, 1], [0, 100]);
+  const heroOpacity = useTransform(heroProgress, [0, 0.6], [1, 0]);
+  const heroBgY = useTransform(heroProgress, [0, 1], [0, 200]);
+
+  const { scrollYProgress: countriesProgress } = useScroll({
+    target: countriesRef,
+    offset: ['start end', 'end start'],
+  });
+  const countriesScale = useTransform(countriesProgress, [0, 0.5], [0.85, 1]);
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[var(--secondary)] via-[#1a3a4a] to-[var(--secondary)]" />
+    <div className="min-h-screen overflow-x-hidden">
+      {/* ========== HERO ========== */}
+      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <motion.div style={{ y: heroBgY }} className="absolute inset-0 bg-gradient-to-b from-[#0f2027] via-[#203a43] to-[#2c5364]" />
 
-        {/* Decorative circles */}
-        <div className="absolute top-20 left-10 w-32 h-32 sm:w-64 sm:h-64 bg-[var(--primary)]/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-40 h-40 sm:w-80 sm:h-80 bg-[var(--accent)]/20 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-60 h-60 sm:w-96 sm:h-96 bg-[var(--warm)]/10 rounded-full blur-3xl" />
+        {/* Animated orbs */}
+        <motion.div style={{ y: heroBgY }} className="absolute top-[10%] left-[5%] w-40 h-40 sm:w-72 sm:h-72 bg-[var(--primary)]/15 rounded-full blur-[80px]" />
+        <motion.div style={{ y: heroBgY }} className="absolute bottom-[15%] right-[5%] w-48 h-48 sm:w-96 sm:h-96 bg-[var(--accent)]/15 rounded-full blur-[100px]" />
+        <motion.div style={{ y: heroBgY }} className="absolute top-[40%] left-[50%] -translate-x-1/2 w-64 h-64 bg-[var(--warm)]/8 rounded-full blur-[120px]" />
 
         {/* Floating fruits */}
-        <div className="absolute top-1/4 left-[10%] text-4xl sm:text-6xl animate-float opacity-60">🍊</div>
-        <div className="absolute top-1/3 right-[15%] text-3xl sm:text-5xl animate-float opacity-50" style={{ animationDelay: '1s' }}>🥭</div>
-        <div className="absolute bottom-1/3 left-[20%] text-3xl sm:text-5xl animate-float opacity-50" style={{ animationDelay: '0.5s' }}>🫐</div>
-        <div className="absolute bottom-1/4 right-[10%] text-4xl sm:text-6xl animate-float opacity-60" style={{ animationDelay: '1.5s' }}>🍋</div>
-        <div className="absolute top-[60%] left-[40%] text-2xl sm:text-4xl animate-float opacity-40" style={{ animationDelay: '2s' }}>🍇</div>
+        <motion.div style={{ y: heroTextY }} className="absolute top-[18%] left-[8%] text-5xl sm:text-7xl animate-float opacity-40 select-none">🍊</motion.div>
+        <motion.div style={{ y: heroTextY, animationDelay: '1s' }} className="absolute top-[28%] right-[12%] text-4xl sm:text-6xl animate-float opacity-30 select-none">🥭</motion.div>
+        <motion.div style={{ y: heroTextY, animationDelay: '0.5s' }} className="absolute bottom-[28%] left-[15%] text-4xl sm:text-6xl animate-float opacity-30 select-none">🫐</motion.div>
+        <motion.div style={{ y: heroTextY, animationDelay: '1.5s' }} className="absolute bottom-[18%] right-[8%] text-5xl sm:text-7xl animate-float opacity-40 select-none">🍋</motion.div>
 
-        <div className="relative z-10 text-center px-4 sm:px-6 max-w-4xl mx-auto">
+        {/* Center content */}
+        <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6 max-w-5xl mx-auto">
+          {/* LOGO - GRAND & CENTRE */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className="mb-6"
+            initial={{ opacity: 0, scale: 0.3, y: 40 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 1.2, type: 'spring', bounce: 0.25 }}
+            style={{ scale: heroLogoScale, y: heroLogoY }}
+            className="mb-10"
           >
-            <span className="text-6xl sm:text-8xl">🍊</span>
+            <Image
+              src="/logo.png"
+              alt="Safty"
+              width={400}
+              height={400}
+              priority
+              className="w-60 h-60 sm:w-80 sm:h-80 lg:w-[22rem] lg:h-[22rem] object-contain drop-shadow-[0_0_60px_rgba(224,123,57,0.35)]"
+            />
           </motion.div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
-          >
-            Les saveurs du monde
-            <br />
-            <span className="text-[var(--primary-light)]">dans votre verre</span>
-          </motion.h1>
+          <motion.div style={{ y: heroTextY, opacity: heroOpacity }}>
+            <motion.h1
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, delay: 0.4 }}
+              className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white mb-5 leading-[1.1] tracking-tight"
+            >
+              Les saveurs du monde
+              <br />
+              <span className="bg-gradient-to-r from-[var(--primary-light)] to-[var(--warm)] bg-clip-text text-transparent">
+                dans votre verre
+              </span>
+            </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-lg sm:text-xl text-gray-300 mb-8 max-w-2xl mx-auto"
-          >
-            Chaque jus raconte l&apos;histoire d&apos;un pays. Retrouvez les saveurs
-            de chez vous, peu importe où vous êtes dans le monde.
-          </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="text-base sm:text-xl text-gray-300/90 mb-10 max-w-2xl mx-auto leading-relaxed"
+            >
+              Chaque jus raconte l&apos;histoire d&apos;un pays. Retrouvez les saveurs
+              de chez vous, peu importe où vous êtes dans le monde.
+            </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-          >
-            <Link href="/products" className="btn-primary text-lg px-8 py-4">
-              Découvrir nos jus
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-            <Link href="/about" className="btn-secondary text-lg px-8 py-4 text-white border-white/40 hover:bg-white hover:text-[var(--secondary)]">
-              Notre histoire
-            </Link>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center"
+            >
+              <Link href="/products" className="group inline-flex items-center gap-2 bg-gradient-to-r from-[var(--primary)] to-[var(--primary-dark)] text-white text-lg px-8 py-4 rounded-full font-semibold shadow-lg shadow-[var(--primary)]/25 hover:shadow-xl hover:shadow-[var(--primary)]/30 hover:-translate-y-0.5 transition-all duration-300">
+                Découvrir nos jus
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+              <Link href="/about" className="inline-flex items-center gap-2 text-white text-lg px-8 py-4 rounded-full font-semibold border border-white/25 hover:bg-white/10 backdrop-blur-sm transition-all duration-300">
+                Notre histoire
+              </Link>
+            </motion.div>
           </motion.div>
         </div>
 
@@ -96,134 +128,144 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
+          transition={{ delay: 2 }}
+          style={{ opacity: heroOpacity }}
           className="absolute bottom-8 left-1/2 -translate-x-1/2"
         >
-          <div className="w-6 h-10 border-2 border-white/40 rounded-full flex justify-center">
+          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
             <motion.div
               animate={{ y: [0, 12, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-1.5 h-1.5 bg-white rounded-full mt-2"
+              className="w-1.5 h-1.5 bg-white/80 rounded-full mt-2"
             />
           </div>
         </motion.div>
       </section>
 
-      {/* Concept Section */}
-      <section className="py-16 sm:py-24 bg-[var(--cream)]">
+      {/* ========== CONCEPT ========== */}
+      <section className="py-20 sm:py-32 bg-[var(--cream)] relative overflow-hidden">
+        {/* Decorative */}
+        <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-[#2c5364]/5 to-transparent" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-center max-w-3xl mx-auto mb-16"
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.9 }}
+            className="text-center max-w-3xl mx-auto mb-20"
           >
-            <span className="text-[var(--primary)] font-semibold text-sm uppercase tracking-widest">
+            <span className="inline-block bg-[var(--primary)]/10 text-[var(--primary)] font-semibold text-xs uppercase tracking-[0.2em] px-4 py-2 rounded-full mb-4">
               Notre Concept
             </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--secondary)] mt-3 mb-6">
-              Un voyage gustatif à chaque gorgée
+            <h2 className="text-3xl sm:text-5xl font-bold text-[var(--secondary)] mb-6 leading-tight">
+              Un voyage gustatif
+              <br className="hidden sm:block" />
+              <span className="text-[var(--primary)]">à chaque gorgée</span>
             </h2>
-            <p className="text-gray-600 text-lg leading-relaxed">
+            <p className="text-gray-500 text-lg leading-relaxed">
               Chez SAFTY, nous croyons que les saveurs sont le chemin le plus court
               vers chez soi. Chaque bouteille capture l&apos;essence d&apos;une terre, d&apos;une
-              tradition, d&apos;un souvenir. Pour que chaque gorgée vous ramène là où
-              votre cœur se sent chez lui.
+              tradition, d&apos;un souvenir.
             </p>
           </motion.div>
 
-          {/* Features */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {[
-              {
-                icon: '🌍',
-                title: 'Du Monde Entier',
-                description: 'Des fruits soigneusement sélectionnés dans leurs régions d\'origine pour une authenticité maximale.',
-              },
-              {
-                icon: '🍃',
-                title: '100% Naturel',
-                description: 'Sans conservateurs, sans colorants artificiels. Juste des fruits, de l\'eau et parfois un peu de sucre.',
-              },
-              {
-                icon: '❤️',
-                title: 'Fait avec Amour',
-                description: 'Chaque recette est développée avec les communautés locales pour respecter les traditions.',
-              },
+              { icon: '🌍', title: 'Du Monde Entier', description: 'Des fruits soigneusement sélectionnés dans leurs régions d\'origine.', color: 'from-blue-500/10 to-teal-500/10' },
+              { icon: '🍃', title: '100% Naturel', description: 'Sans conservateurs, sans colorants. Juste des fruits et de l\'eau.', color: 'from-green-500/10 to-emerald-500/10' },
+              { icon: '❤️', title: 'Fait avec Amour', description: 'Chaque recette est développée avec les communautés locales.', color: 'from-rose-500/10 to-orange-500/10' },
             ].map((feature, index) => (
               <motion.div
                 key={feature.title}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                className="bg-white rounded-2xl p-8 text-center card-hover shadow-sm"
+                viewport={{ once: true, margin: '-30px' }}
+                transition={{ duration: 0.6, delay: index * 0.15 }}
+                whileHover={{ y: -8 }}
+                className={`bg-gradient-to-br ${feature.color} bg-white rounded-3xl p-8 sm:p-10 text-center border border-white shadow-sm hover:shadow-xl transition-shadow duration-300`}
               >
-                <span className="text-5xl mb-4 block">{feature.icon}</span>
+                <motion.span
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3 + index * 0.1, type: 'spring', bounce: 0.5 }}
+                  className="text-5xl sm:text-6xl mb-5 block"
+                >
+                  {feature.icon}
+                </motion.span>
                 <h3 className="text-xl font-bold text-[var(--secondary)] mb-3">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600">{feature.description}</p>
+                <p className="text-gray-500 leading-relaxed">{feature.description}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Featured Products */}
-      <section className="py-16 sm:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ========== FEATURED PRODUCTS ========== */}
+      <section className="py-20 sm:py-32 bg-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--primary)]/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-12"
+            className="text-center mb-16"
           >
-            <span className="text-[var(--primary)] font-semibold text-sm uppercase tracking-widest">
+            <span className="inline-block bg-[var(--primary)]/10 text-[var(--primary)] font-semibold text-xs uppercase tracking-[0.2em] px-4 py-2 rounded-full mb-4">
               Sélection
             </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--secondary)] mt-3">
+            <h2 className="text-3xl sm:text-5xl font-bold text-[var(--secondary)] leading-tight">
               Nos jus vedettes
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredProducts.slice(0, 6).map((product, index) => (
               <motion.div
                 key={product.id}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 60 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: '-30px' }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white rounded-2xl overflow-hidden card-hover shadow-sm border border-gray-100"
+                whileHover={{ y: -10 }}
+                className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl border border-gray-100/80 transition-all duration-300"
               >
-                {/* Product image placeholder */}
-                <div className="h-48 bg-gradient-to-br from-[var(--primary-light)]/20 to-[var(--accent)]/20 flex items-center justify-center relative">
-                  <span className="text-6xl">{product.countryFlag}</span>
-                  <span className="absolute top-3 right-3 bg-[var(--primary)] text-white text-xs px-3 py-1 rounded-full font-semibold">
+                <div className="h-52 bg-gradient-to-br from-[var(--cream)] to-[var(--primary-light)]/10 flex items-center justify-center relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-t from-white/20 to-transparent" />
+                  <motion.span
+                    whileHover={{ scale: 1.3, rotate: 10 }}
+                    transition={{ type: 'spring' }}
+                    className="text-7xl relative z-10"
+                  >
+                    {product.countryFlag}
+                  </motion.span>
+                  <span className="absolute top-4 right-4 bg-[var(--primary)] text-white text-[11px] px-3 py-1.5 rounded-full font-semibold uppercase tracking-wide">
                     {product.category}
                   </span>
                 </div>
 
                 <div className="p-6">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-sm text-gray-500">{product.country}</span>
-                    <span className="text-gray-300">•</span>
-                    <span className="text-sm text-gray-500">{product.region}</span>
+                    <span className="text-xs text-gray-400 font-medium">{product.country}</span>
+                    <span className="w-1 h-1 bg-gray-300 rounded-full" />
+                    <span className="text-xs text-gray-400">{product.region}</span>
                   </div>
-                  <h3 className="text-lg font-bold text-[var(--secondary)] mb-2">
+                  <h3 className="text-lg font-bold text-[var(--secondary)] mb-2 group-hover:text-[var(--primary)] transition-colors">
                     {product.name}
                   </h3>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                  <p className="text-gray-400 text-sm mb-5 line-clamp-2 leading-relaxed">
                     {product.description}
                   </p>
                   <div className="flex items-center justify-between">
                     <span className="text-2xl font-bold text-[var(--primary)]">
                       {product.price.toFixed(2)} €
                     </span>
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
                       onClick={() =>
                         addItem({
                           id: product.id,
@@ -234,12 +276,12 @@ export default function Home() {
                           country: product.country,
                         })
                       }
-                      className="bg-[var(--primary)] hover:bg-[var(--primary-dark)] text-white p-3 rounded-full transition-colors"
+                      className="bg-[var(--secondary)] hover:bg-[var(--primary)] text-white w-11 h-11 rounded-full flex items-center justify-center transition-colors duration-300 shadow-lg"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                       </svg>
-                    </button>
+                    </motion.button>
                   </div>
                 </div>
               </motion.div>
@@ -250,12 +292,12 @@ export default function Home() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.5 }}
-            className="text-center mt-12"
+            transition={{ delay: 0.4 }}
+            className="text-center mt-14"
           >
-            <Link href="/products" className="btn-primary text-lg">
+            <Link href="/products" className="group inline-flex items-center gap-2 bg-[var(--secondary)] text-white text-lg px-8 py-4 rounded-full font-semibold hover:bg-[var(--primary)] transition-colors duration-300 shadow-lg">
               Voir tous nos jus
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </Link>
@@ -263,72 +305,82 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Countries Section */}
-      <section className="py-16 sm:py-24 bg-[var(--secondary)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ========== COUNTRIES ========== */}
+      <section ref={countriesRef} className="py-20 sm:py-32 bg-gradient-to-b from-[#0f2027] via-[#203a43] to-[#2c5364] overflow-hidden relative">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PHBhdGggZD0iTTM2IDM0djItSDJ2LTJoMzR6bTAtMzBWMkgydjJoMzR6TTIgMzRoMnYySDJ2LTJ6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-50" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-12"
+            className="text-center mb-14"
           >
-            <span className="text-[var(--primary-light)] font-semibold text-sm uppercase tracking-widest">
+            <span className="inline-block bg-white/10 text-[var(--primary-light)] font-semibold text-xs uppercase tracking-[0.2em] px-4 py-2 rounded-full mb-4">
               Origines
             </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mt-3 mb-4">
-              Des saveurs de 12 pays
+            <h2 className="text-3xl sm:text-5xl font-bold text-white mb-4 leading-tight">
+              Des saveurs de <span className="text-[var(--primary-light)]">12 pays</span>
             </h2>
-            <p className="text-gray-300 max-w-xl mx-auto">
-              Chaque pays apporte ses fruits uniques, ses recettes ancestrales
-              et ses traditions gustatives.
+            <p className="text-gray-400 max-w-xl mx-auto text-lg">
+              Chaque pays apporte ses fruits uniques et ses traditions gustatives.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4 sm:gap-6">
+          <motion.div
+            style={{ scale: countriesScale }}
+            className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 sm:gap-5"
+          >
             {countries.map((country, index) => (
               <motion.div
                 key={country}
-                initial={{ opacity: 0, scale: 0.8 }}
+                initial={{ opacity: 0, scale: 0.5 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-                className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/20 transition-colors cursor-default"
+                transition={{ duration: 0.5, delay: index * 0.04, type: 'spring', bounce: 0.4 }}
+                whileHover={{ scale: 1.12, y: -6 }}
+                className="bg-white/8 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-5 text-center hover:bg-white/15 hover:border-white/20 transition-all duration-300 cursor-default"
               >
                 <span className="text-3xl sm:text-4xl block mb-2">
                   {countryEmojis[country] || '🌍'}
                 </span>
-                <span className="text-white text-xs sm:text-sm font-medium">
+                <span className="text-white/80 text-xs sm:text-sm font-medium">
                   {country}
                 </span>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 sm:py-24 bg-gradient-to-r from-[var(--primary)] to-[var(--primary-dark)]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+      {/* ========== CTA ========== */}
+      <section className="py-20 sm:py-28 bg-gradient-to-br from-[var(--primary)] via-[var(--primary-dark)] to-[#a14520] overflow-hidden relative">
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-[20%] w-64 h-64 bg-white/10 rounded-full blur-[100px]" />
+          <div className="absolute bottom-0 right-[20%] w-80 h-80 bg-[var(--warm)]/20 rounded-full blur-[100px]" />
+        </div>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
-              Prêt à voyager par les saveurs ?
+            <h2 className="text-3xl sm:text-5xl font-bold text-white mb-6 leading-tight">
+              Prêt à voyager
+              <br />
+              par les saveurs ?
             </h2>
-            <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">
+            <p className="text-white/70 text-lg mb-10 max-w-lg mx-auto">
               Commandez vos jus préférés et recevez un petit bout de chez vous,
               directement à votre porte.
             </p>
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 bg-white text-[var(--primary-dark)] px-8 py-4 rounded-full text-lg font-bold hover:bg-gray-100 transition-colors"
+              className="group inline-flex items-center gap-2 bg-white text-[var(--primary-dark)] px-10 py-5 rounded-full text-lg font-bold hover:bg-gray-50 transition-all duration-300 shadow-2xl shadow-black/20 hover:-translate-y-1"
             >
               Commander maintenant
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </Link>

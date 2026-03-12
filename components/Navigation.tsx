@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from '@/store/cartStore';
 
@@ -36,15 +37,14 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl sm:text-3xl">🍊</span>
-            <span
-              className={`text-xl sm:text-2xl font-bold tracking-tight transition-colors ${
-                isScrolled ? 'text-[var(--secondary)]' : 'text-white'
-              }`}
-            >
-              SAFTY
-            </span>
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/logo.png"
+              alt="Safty"
+              width={50}
+              height={50}
+              className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+            />
           </Link>
 
           {/* Desktop Nav */}
