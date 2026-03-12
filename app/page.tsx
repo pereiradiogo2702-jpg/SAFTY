@@ -15,6 +15,13 @@ const countryEmojis: Record<string, string> = {
 
 const flavorWords = ['Maracujá', 'Açaï', 'Yuzu', 'Bissap', 'Tamarindo', 'Guaraná', 'Hibiscus', 'Mangue', 'Papaye', 'Goyave', 'Camu Camu', 'Tamarin'];
 
+const cans = [
+  { src: '/cans/can-1.png', name: 'Lady Red', flavor: 'Blueberry & Strawberry' },
+  { src: '/cans/can-2.png', name: 'Lady White', flavor: 'Blueberry & Strawberry' },
+  { src: '/cans/can-3.png', name: 'Maria', flavor: 'Orange & Figue' },
+  { src: '/cans/can-4.png', name: 'Maria New', flavor: 'Orange & Figue' },
+];
+
 export default function Home() {
   const addItem = useCartStore((state) => state.addItem);
   const heroRef = useRef<HTMLElement>(null);
@@ -50,11 +57,11 @@ export default function Home() {
       {/* ═══════════════════════════════════════════════
           HERO - Full screen with bg image, marquee, floating fruits
           ═══════════════════════════════════════════════ */}
-      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section ref={heroRef} className="relative min-h-screen flex flex-col justify-center overflow-hidden">
         {/* Background Image with parallax */}
         <motion.div style={{ y: heroBgY }} className="absolute inset-0">
           <Image src="/hero-bg.jpg" alt="" fill priority className="object-cover scale-110" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/30 to-black/65" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/70" />
         </motion.div>
 
         {/* ── MARQUEE TEXT behind content ── */}
@@ -75,31 +82,15 @@ export default function Home() {
           </div>
         </motion.div>
 
-        {/* ── Floating fruits with depth/blur (Ciao style) ── */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {/* Close layer - sharp */}
-          <motion.div style={{ y: heroTextY }} className="absolute top-[12%] left-[6%] text-6xl sm:text-8xl opacity-50 animate-float-slow select-none">🍊</motion.div>
-          <motion.div style={{ y: heroTextY }} className="absolute bottom-[15%] right-[6%] text-5xl sm:text-7xl opacity-45 animate-float-slow select-none" >🍋</motion.div>
-
-          {/* Mid layer - slight blur */}
-          <div className="absolute top-[25%] right-[14%] text-4xl sm:text-6xl opacity-25 blur-[2px] animate-float-slow select-none" style={{ animationDelay: '1.2s' }}>🥭</div>
-          <div className="absolute bottom-[30%] left-[12%] text-4xl sm:text-5xl opacity-25 blur-[2px] animate-float-slow select-none" style={{ animationDelay: '0.7s' }}>🫐</div>
-
-          {/* Far layer - more blur */}
-          <div className="absolute top-[45%] left-[3%] text-3xl opacity-15 blur-[5px] animate-float-slow select-none" style={{ animationDelay: '2s' }}>🍓</div>
-          <div className="absolute top-[8%] right-[28%] text-3xl opacity-12 blur-[4px] animate-float-slow select-none" style={{ animationDelay: '1.5s' }}>🥝</div>
-          <div className="absolute bottom-[10%] left-[35%] text-3xl opacity-12 blur-[6px] animate-float-slow select-none" style={{ animationDelay: '0.3s' }}>🍇</div>
-        </div>
-
         {/* ── Center content ── */}
-        <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6 max-w-5xl mx-auto">
+        <div className="relative z-10 flex flex-col items-center text-center px-4 sm:px-6 max-w-6xl mx-auto pt-28 sm:pt-32">
           {/* LOGO */}
           <motion.div
             initial={{ opacity: 0, scale: 0.3, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1.2, type: 'spring', bounce: 0.25 }}
             style={{ scale: heroLogoScale, y: heroLogoY }}
-            className="mb-8"
+            className="mb-6"
           >
             <Image
               src="/logo.png"
@@ -107,7 +98,7 @@ export default function Home() {
               width={500}
               height={500}
               priority
-              className="w-72 h-72 sm:w-96 sm:h-96 lg:w-[28rem] lg:h-[28rem] object-contain drop-shadow-[0_0_80px_rgba(224,123,57,0.45)]"
+              className="w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 object-contain drop-shadow-[0_0_80px_rgba(224,123,57,0.45)]"
             />
           </motion.div>
 
@@ -116,7 +107,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.4 }}
-              className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white mb-5 leading-[1.1] tracking-tight"
+              className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 leading-[1.1] tracking-tight"
             >
               Les saveurs du monde
               <br />
@@ -129,30 +120,71 @@ export default function Home() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-base sm:text-xl text-gray-300/90 mb-10 max-w-2xl mx-auto leading-relaxed"
+              className="text-base sm:text-lg text-gray-300/90 mb-8 max-w-2xl mx-auto leading-relaxed"
             >
               Chaque jus raconte l&apos;histoire d&apos;un pays. Retrouvez les saveurs
               de chez vous, peu importe où vous êtes dans le monde.
             </motion.p>
+          </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center"
-            >
-              <Link href="/products" className="group relative inline-flex items-center gap-2 bg-gradient-to-r from-[var(--primary)] to-[var(--primary-dark)] text-white text-lg px-8 py-4 rounded-full font-semibold shadow-lg shadow-[var(--primary)]/25 hover:shadow-xl hover:shadow-[var(--primary)]/40 hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-                <span className="relative z-10 flex items-center gap-2">
-                  Découvrir nos jus
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </span>
-              </Link>
-              <Link href="/about" className="inline-flex items-center gap-2 text-white text-lg px-8 py-4 rounded-full font-semibold border border-white/25 hover:bg-white/10 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1">
-                Notre histoire
-              </Link>
-            </motion.div>
+          {/* ── 4 CANS - Aligned left to right ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="flex items-end justify-center gap-3 sm:gap-6 lg:gap-10 mb-10 w-full max-w-4xl"
+          >
+            {cans.map((can, index) => (
+              <motion.div
+                key={can.name}
+                initial={{ opacity: 0, y: 80 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 1 + index * 0.15, type: 'spring', bounce: 0.3 }}
+                whileHover={{ y: -30, x: -8, scale: 1.08, rotate: -2 }}
+                className="relative cursor-pointer group flex-1 max-w-[22%]"
+              >
+                <div className="relative">
+                  <Image
+                    src={can.src}
+                    alt={can.name}
+                    width={300}
+                    height={450}
+                    className="w-full h-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.4)] group-hover:drop-shadow-[0_25px_50px_rgba(224,123,57,0.4)] transition-all duration-500"
+                  />
+                  {/* Glow effect on hover */}
+                  <div className="absolute inset-0 rounded-2xl bg-[var(--primary)]/0 group-hover:bg-[var(--primary)]/5 transition-all duration-500" />
+                </div>
+                {/* Label on hover */}
+                <motion.div
+                  className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap"
+                >
+                  <span className="text-white text-xs sm:text-sm font-semibold bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                    {can.flavor}
+                  </span>
+                </motion.div>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.6 }}
+            style={{ opacity: heroOpacity }}
+            className="flex flex-col sm:flex-row gap-4 justify-center mt-4"
+          >
+            <Link href="/products" className="group relative inline-flex items-center gap-2 bg-gradient-to-r from-[var(--primary)] to-[var(--primary-dark)] text-white text-lg px-8 py-4 rounded-full font-semibold shadow-lg shadow-[var(--primary)]/25 hover:shadow-xl hover:shadow-[var(--primary)]/40 hover:-translate-y-1 transition-all duration-300">
+              <span className="relative z-10 flex items-center gap-2">
+                Découvrir nos jus
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </span>
+            </Link>
+            <Link href="/about" className="inline-flex items-center gap-2 text-white text-lg px-8 py-4 rounded-full font-semibold border border-white/25 hover:bg-white/10 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1">
+              Notre histoire
+            </Link>
           </motion.div>
         </div>
 
