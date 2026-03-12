@@ -86,7 +86,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="flex items-end justify-center gap-4 sm:gap-8 lg:gap-12 mb-10 w-full"
+            className="flex items-end justify-center gap-6 sm:gap-10 lg:gap-14 mb-10 mx-auto"
           >
             {cans.map((can, index) => (
               <motion.div
@@ -94,17 +94,19 @@ export default function Home() {
                 initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1 + index * 0.15, type: 'spring', bounce: 0.3 }}
-                whileHover={{ y: -35, x: -10, scale: 1.12, rotate: -3 }}
-                className="relative cursor-pointer group w-[20vw] sm:w-[18vw] lg:w-[14vw] max-w-[220px]"
+                whileHover={{ y: -40, x: -10, scale: 1.15, rotate: -3 }}
+                whileTap={{ scale: 0.95 }}
+                style={{ transition: 'none' }}
+                className="relative cursor-pointer group w-[28vw] sm:w-[22vw] lg:w-[18vw] max-w-[280px]"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={can.src}
                   alt={can.name}
-                  className="w-full h-auto object-contain drop-shadow-[0_15px_40px_rgba(0,0,0,0.5)] group-hover:drop-shadow-[0_30px_60px_rgba(224,123,57,0.5)] transition-all duration-500"
+                  className="w-full h-auto object-contain drop-shadow-[0_15px_40px_rgba(0,0,0,0.5)] group-hover:drop-shadow-[0_30px_60px_rgba(224,123,57,0.5)] transition-[filter] duration-200"
                 />
                 {/* Label on hover */}
-                <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap">
+                <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-150 whitespace-nowrap">
                   <span className="text-white text-xs sm:text-sm font-semibold bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-full">
                     {can.flavor}
                   </span>
