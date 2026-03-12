@@ -62,7 +62,7 @@ export default function Home() {
         </motion.div>
 
         {/* ── Center content ── */}
-        <div className="relative z-10 flex flex-col items-center text-center px-4 sm:px-6 max-w-6xl mx-auto pt-28 sm:pt-32">
+        <div className="relative z-10 flex flex-col items-center text-center w-full px-4 sm:px-6 mx-auto pt-28 sm:pt-32">
           {/* LOGO */}
           <motion.div
             initial={{ opacity: 0, scale: 0.3, y: 40 }}
@@ -86,7 +86,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="flex items-end justify-center gap-6 sm:gap-10 lg:gap-14 mb-10 mx-auto"
+            className="flex items-end justify-center gap-6 sm:gap-10 lg:gap-14 mb-10 w-full"
           >
             {cans.map((can, index) => (
               <motion.div
