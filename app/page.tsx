@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { featuredProducts, countries } from '@/lib/products';
 import { useCartStore } from '@/store/cartStore';
+import ProductShowcase from '@/components/ProductShowcase';
 
 const countryEmojis: Record<string, string> = {
   'Portugal': '🇵🇹', 'Brésil': '🇧🇷', 'Cap-Vert': '🇨🇻', 'Angola': '🇦🇴',
@@ -13,11 +14,43 @@ const countryEmojis: Record<string, string> = {
   'Maroc': '🇲🇦', 'Inde': '🇮🇳', 'Mexique': '🇲🇽', 'Thaïlande': '🇹🇭', 'Japon': '🇯🇵',
 };
 
-const cans = [
-  { src: '/cans/bottle.png', name: 'Safty 1', flavor: 'Fresh & Natural' },
-  { src: '/cans/bottle.png', name: 'Safty 2', flavor: 'Fresh & Natural' },
-  { src: '/cans/bottle.png', name: 'Safty 3', flavor: 'Fresh & Natural' },
-  { src: '/cans/bottle.png', name: 'Safty 4', flavor: 'Fresh & Natural' },
+const saftyProducts = [
+  {
+    id: 'safty-1',
+    name: 'Original',
+    image: '/cans/bottle.png',
+    description: 'Notre jus signature aux fruits frais, un melange parfait de saveurs tropicales.',
+    color: '#4CAF50',
+    bgColor: '#E8F5E9',
+    tags: ['Naturel', 'Vitamine C', 'Sans sucre ajouté'],
+  },
+  {
+    id: 'safty-2',
+    name: 'Tropical',
+    image: '/cans/bottle.png',
+    description: 'Un voyage exotique avec mangue, passion et ananas. Fraicheur garantie.',
+    color: '#FF9800',
+    bgColor: '#FFF3E0',
+    tags: ['Exotique', 'Antioxydants', 'Bio'],
+  },
+  {
+    id: 'safty-3',
+    name: 'Vitality',
+    image: '/cans/bottle.png',
+    description: 'Boost d\'énergie naturelle avec gingembre, citron et pomme verte.',
+    color: '#8BC34A',
+    bgColor: '#F1F8E9',
+    tags: ['Énergie', 'Gingembre', 'Detox'],
+  },
+  {
+    id: 'safty-4',
+    name: 'Berry Mix',
+    image: '/cans/bottle.png',
+    description: 'Explosion de baies: myrtille, framboise et açai pour un plaisir intense.',
+    color: '#9C27B0',
+    bgColor: '#F3E5F5',
+    tags: ['Baies', 'Oméga-3', 'Premium'],
+  },
 ];
 
 export default function Home() {
@@ -81,39 +114,6 @@ export default function Home() {
             />
           </motion.div>
 
-          {/* ── 4 BOTTLES - Big, centered ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 60 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="flex items-end justify-center gap-6 sm:gap-10 lg:gap-14 mb-10 w-full"
-          >
-            {cans.map((can, index) => (
-              <motion.div
-                key={can.name}
-                initial={{ opacity: 0, y: 100 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1 + index * 0.15, type: 'spring', bounce: 0.3 }}
-                whileHover={{ y: -40, x: -10, scale: 1.15, rotate: -3, transition: { type: 'tween', duration: 0.15, ease: 'easeOut' } }}
-                whileTap={{ scale: 0.95 }}
-                className="relative cursor-pointer group w-[28vw] sm:w-[22vw] lg:w-[18vw] max-w-[280px]"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={can.src}
-                  alt={can.name}
-                  className="w-full h-auto object-contain drop-shadow-[0_15px_40px_rgba(0,0,0,0.5)] group-hover:drop-shadow-[0_30px_60px_rgba(224,123,57,0.5)] transition-[filter] duration-200"
-                />
-                {/* Label on hover */}
-                <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-150 whitespace-nowrap">
-                  <span className="text-white text-xs sm:text-sm font-semibold bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                    {can.flavor}
-                  </span>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-
           {/* Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -152,6 +152,19 @@ export default function Home() {
             />
           </div>
         </motion.div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════
+          NOS SAVEURS - ProductShowcase
+          ═══════════════════════════════════════════════ */}
+      <section className="py-16 sm:py-24 bg-[var(--cream)]">
+        <h2 className="text-center text-3xl sm:text-5xl lg:text-6xl font-bold text-[var(--secondary)] mb-2">
+          Nos Saveurs
+        </h2>
+        <p className="text-center text-gray-400 text-sm mb-4">
+          Cliquez sur une cannette pour la découvrir
+        </p>
+        <ProductShowcase products={saftyProducts} />
       </section>
 
       {/* ═══════════════════════════════════════════════
