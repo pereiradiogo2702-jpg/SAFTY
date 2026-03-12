@@ -94,9 +94,8 @@ export default function Home() {
                 initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1 + index * 0.15, type: 'spring', bounce: 0.3 }}
-                whileHover={{ y: -40, x: -10, scale: 1.15, rotate: -3 }}
+                whileHover={{ y: -40, x: -10, scale: 1.15, rotate: -3, transition: { type: 'tween', duration: 0.15, ease: 'easeOut' } }}
                 whileTap={{ scale: 0.95 }}
-                style={{ transition: 'none' }}
                 className="relative cursor-pointer group w-[28vw] sm:w-[22vw] lg:w-[18vw] max-w-[280px]"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
