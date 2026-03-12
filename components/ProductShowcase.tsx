@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import Image from "next/image";
+
 
 /*
  * ═══════════════════════════════════════════════════════════
@@ -139,13 +139,11 @@ export default function ProductShowcase({ products }: Props) {
               onClick={() => openModal(i)}
             >
               <div className="ps-can-img-container">
-                <Image
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
                   src={product.image}
                   alt={product.name}
-                  width={120}
-                  height={280}
                   className="ps-can-img"
-                  priority={i < 3}
                 />
               </div>
               <div className="ps-can-shadow" />
@@ -219,13 +217,11 @@ export default function ProductShowcase({ products }: Props) {
                   className="ps-big-can-glow"
                   style={{ background: selected.color }}
                 />
-                <Image
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
                   src={selected.image}
                   alt={selected.name}
-                  width={220}
-                  height={500}
                   className="ps-big-can-img"
-                  priority
                 />
               </>
             )}
