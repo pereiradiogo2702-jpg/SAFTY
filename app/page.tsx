@@ -48,18 +48,18 @@ export default function Home() {
     <div className="min-h-screen overflow-x-hidden">
       {/* ========== HERO ========== */}
       <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <motion.div style={{ y: heroBgY }} className="absolute inset-0 bg-gradient-to-b from-[#0f2027] via-[#203a43] to-[#2c5364]" />
-
-        {/* Animated orbs */}
-        <motion.div style={{ y: heroBgY }} className="absolute top-[10%] left-[5%] w-40 h-40 sm:w-72 sm:h-72 bg-[var(--primary)]/15 rounded-full blur-[80px]" />
-        <motion.div style={{ y: heroBgY }} className="absolute bottom-[15%] right-[5%] w-48 h-48 sm:w-96 sm:h-96 bg-[var(--accent)]/15 rounded-full blur-[100px]" />
-        <motion.div style={{ y: heroBgY }} className="absolute top-[40%] left-[50%] -translate-x-1/2 w-64 h-64 bg-[var(--warm)]/8 rounded-full blur-[120px]" />
-
-        {/* Floating fruits */}
-        <motion.div style={{ y: heroTextY }} className="absolute top-[18%] left-[8%] text-5xl sm:text-7xl animate-float opacity-40 select-none">🍊</motion.div>
-        <motion.div style={{ y: heroTextY, animationDelay: '1s' }} className="absolute top-[28%] right-[12%] text-4xl sm:text-6xl animate-float opacity-30 select-none">🥭</motion.div>
-        <motion.div style={{ y: heroTextY, animationDelay: '0.5s' }} className="absolute bottom-[28%] left-[15%] text-4xl sm:text-6xl animate-float opacity-30 select-none">🫐</motion.div>
-        <motion.div style={{ y: heroTextY, animationDelay: '1.5s' }} className="absolute bottom-[18%] right-[8%] text-5xl sm:text-7xl animate-float opacity-40 select-none">🍋</motion.div>
+        {/* Background Image */}
+        <motion.div style={{ y: heroBgY }} className="absolute inset-0">
+          <Image
+            src="/hero-bg.jpg"
+            alt=""
+            fill
+            priority
+            className="object-cover"
+          />
+          {/* Dark overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+        </motion.div>
 
         {/* Center content */}
         <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6 max-w-5xl mx-auto">
