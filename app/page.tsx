@@ -13,8 +13,6 @@ const countryEmojis: Record<string, string> = {
   'Maroc': '🇲🇦', 'Inde': '🇮🇳', 'Mexique': '🇲🇽', 'Thaïlande': '🇹🇭', 'Japon': '🇯🇵',
 };
 
-const flavorWords = ['Maracujá', 'Açaï', 'Yuzu', 'Bissap', 'Tamarindo', 'Guaraná', 'Hibiscus', 'Mangue', 'Papaye', 'Goyave', 'Camu Camu', 'Tamarin'];
-
 const cans = [
   { src: '/cans/bottle.png', name: 'Safty 1', flavor: 'Fresh & Natural' },
   { src: '/cans/bottle.png', name: 'Safty 2', flavor: 'Fresh & Natural' },
@@ -36,7 +34,7 @@ export default function Home() {
   const heroLogoY = useTransform(heroProgress, [0, 1], [0, -150]);
   const heroOpacity = useTransform(heroProgress, [0, 0.5], [1, 0]);
   const heroBgY = useTransform(heroProgress, [0, 1], [0, 150]);
-  const marqueeY = useTransform(heroProgress, [0, 1], [0, 80]);
+
 
   const { scrollYProgress: conceptProgress } = useScroll({
     target: conceptRef,
@@ -61,24 +59,6 @@ export default function Home() {
         <motion.div style={{ y: heroBgY }} className="absolute inset-0">
           <Image src="/hero-bg.jpg" alt="" fill priority className="object-cover scale-110" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/70" />
-        </motion.div>
-
-        {/* ── MARQUEE TEXT behind content ── */}
-        <motion.div
-          style={{ y: marqueeY, opacity: heroOpacity }}
-          className="absolute inset-0 flex items-center overflow-hidden pointer-events-none select-none"
-        >
-          <div className="marquee-scroll whitespace-nowrap">
-            {[...Array(2)].map((_, i) => (
-              <span key={i} className="inline-flex gap-[4vw] shrink-0 mr-[4vw]">
-                {['SAFTY', '✦', 'SAFTY', '✦', 'SAFTY', '✦', 'SAFTY', '✦'].map((word, j) => (
-                  <span key={j} className="text-[18vw] sm:text-[15vw] font-black text-white/[0.06] leading-none tracking-tight">
-                    {word}
-                  </span>
-                ))}
-              </span>
-            ))}
-          </div>
         </motion.div>
 
         {/* ── Center content ── */}
@@ -117,11 +97,10 @@ export default function Home() {
                 whileHover={{ y: -35, x: -10, scale: 1.12, rotate: -3 }}
                 className="relative cursor-pointer group w-[20vw] sm:w-[18vw] lg:w-[14vw] max-w-[220px]"
               >
-                <Image
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
                   src={can.src}
                   alt={can.name}
-                  width={400}
-                  height={600}
                   className="w-full h-auto object-contain drop-shadow-[0_15px_40px_rgba(0,0,0,0.5)] group-hover:drop-shadow-[0_30px_60px_rgba(224,123,57,0.5)] transition-all duration-500"
                 />
                 {/* Label on hover */}
@@ -175,41 +154,10 @@ export default function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════════
-          FLAVOR MARQUEE - Scrolling flavor names
-          ═══════════════════════════════════════════════ */}
-      <section className="py-6 bg-[var(--secondary)] overflow-hidden">
-        <div className="marquee-scroll-reverse whitespace-nowrap">
-          {[...Array(2)].map((_, i) => (
-            <span key={i} className="inline-flex gap-8 shrink-0 mr-8">
-              {flavorWords.map((word, j) => (
-                <span key={j} className="inline-flex items-center gap-8">
-                  <span className="text-lg sm:text-xl font-bold text-white/80 uppercase tracking-[0.15em]">{word}</span>
-                  <span className="text-[var(--primary-light)] text-sm">✦</span>
-                </span>
-              ))}
-            </span>
-          ))}
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════
           CONCEPT - Features with parallax
           ═══════════════════════════════════════════════ */}
       <section ref={conceptRef} className="py-24 sm:py-36 bg-[var(--cream)] relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-[var(--secondary)]/10 to-transparent" />
-
-        {/* Background marquee text */}
-        <div className="absolute inset-0 flex items-center overflow-hidden pointer-events-none opacity-[0.03]">
-          <div className="marquee-scroll whitespace-nowrap">
-            {[...Array(2)].map((_, i) => (
-              <span key={i} className="inline-flex gap-[3vw] shrink-0 mr-[3vw]">
-                {['NATUREL', '✦', 'AUTHENTIQUE', '✦', 'ARTISANAL', '✦'].map((word, j) => (
-                  <span key={j} className="text-[12vw] font-black text-[var(--secondary)] leading-none">{word}</span>
-                ))}
-              </span>
-            ))}
-          </div>
-        </div>
 
         <motion.div style={{ y: conceptY }} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <motion.div
@@ -275,19 +223,6 @@ export default function Home() {
         {/* Decorative blobs */}
         <div className="absolute top-0 right-0 w-[40rem] h-[40rem] bg-[var(--primary)]/5 rounded-full blur-[150px] -translate-y-1/2 translate-x-1/3" />
         <div className="absolute bottom-0 left-0 w-[30rem] h-[30rem] bg-[var(--accent)]/5 rounded-full blur-[120px] translate-y-1/3 -translate-x-1/3" />
-
-        {/* Flavor marquee behind products */}
-        <div className="absolute top-1/2 -translate-y-1/2 w-full overflow-hidden pointer-events-none opacity-[0.04] -rotate-3">
-          <div className="marquee-scroll whitespace-nowrap">
-            {[...Array(2)].map((_, i) => (
-              <span key={i} className="inline-flex gap-[3vw] shrink-0 mr-[3vw]">
-                {flavorWords.map((word, j) => (
-                  <span key={j} className="text-[10vw] font-black text-[var(--secondary)] leading-none">{word}</span>
-                ))}
-              </span>
-            ))}
-          </div>
-        </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <motion.div
@@ -392,19 +327,6 @@ export default function Home() {
           COUNTRIES - Glass cards with marquee
           ═══════════════════════════════════════════════ */}
       <section ref={countriesRef} className="py-24 sm:py-36 bg-gradient-to-b from-[#0f2027] via-[#203a43] to-[#2c5364] overflow-hidden relative">
-        {/* Background marquee */}
-        <div className="absolute inset-0 flex items-center overflow-hidden pointer-events-none opacity-[0.03]">
-          <div className="marquee-scroll-reverse whitespace-nowrap">
-            {[...Array(2)].map((_, i) => (
-              <span key={i} className="inline-flex gap-[4vw] shrink-0 mr-[4vw]">
-                {Object.values(countryEmojis).map((flag, j) => (
-                  <span key={j} className="text-[15vw] leading-none">{flag}</span>
-                ))}
-              </span>
-            ))}
-          </div>
-        </div>
-
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -456,19 +378,6 @@ export default function Home() {
           CTA - With marquee and gradient
           ═══════════════════════════════════════════════ */}
       <section className="py-24 sm:py-32 bg-gradient-to-br from-[var(--primary)] via-[var(--primary-dark)] to-[#a14520] overflow-hidden relative">
-        {/* Marquee behind */}
-        <div className="absolute inset-0 flex items-center overflow-hidden pointer-events-none opacity-[0.08]">
-          <div className="marquee-scroll whitespace-nowrap">
-            {[...Array(2)].map((_, i) => (
-              <span key={i} className="inline-flex gap-[3vw] shrink-0 mr-[3vw]">
-                {['COMMANDER', '✦', 'DÉGUSTER', '✦', 'VOYAGER', '✦', 'SAVOURER', '✦'].map((word, j) => (
-                  <span key={j} className="text-[12vw] font-black text-white leading-none">{word}</span>
-                ))}
-              </span>
-            ))}
-          </div>
-        </div>
-
         <div className="absolute inset-0">
           <div className="absolute top-0 left-[20%] w-64 h-64 bg-white/10 rounded-full blur-[100px]" />
           <div className="absolute bottom-0 right-[20%] w-80 h-80 bg-[var(--warm)]/20 rounded-full blur-[100px]" />
