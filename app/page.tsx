@@ -137,7 +137,7 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1.2, type: 'spring', bounce: 0.25 }}
             style={{ scale: heroLogoScale, y: heroLogoY }}
-            className="mb-6"
+            className="mb-2"
           >
             <Image
               src="/logo.png"
@@ -145,7 +145,7 @@ export default function Home() {
               width={500}
               height={500}
               priority
-              className="w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 object-contain drop-shadow-[0_0_80px_rgba(224,123,57,0.45)]"
+              className="w-64 h-64 sm:w-80 sm:h-80 lg:w-[26rem] lg:h-[26rem] object-contain drop-shadow-[0_0_80px_rgba(224,123,57,0.45)]"
             />
           </motion.div>
 
@@ -154,7 +154,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="flex items-end justify-center gap-6 sm:gap-10 lg:gap-14 mb-10 w-full"
+            className="flex items-end justify-center gap-6 sm:gap-10 lg:gap-14 mb-10 w-full mt-[-2rem]"
           >
             {saftyProducts.map((product, index) => (
               <motion.div
