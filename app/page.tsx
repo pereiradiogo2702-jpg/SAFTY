@@ -126,7 +126,7 @@ export default function Home() {
         {/* Background Image with parallax */}
         <motion.div style={{ y: heroBgY }} className="absolute inset-0">
           <Image src="/hero-bg.jpg" alt="" fill priority className="object-cover scale-110" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/70" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/15 to-black/40" />
         </motion.div>
 
         {/* ── Center content ── */}
