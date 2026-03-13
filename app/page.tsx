@@ -145,7 +145,7 @@ export default function Home() {
               width={500}
               height={500}
               priority
-              className="w-64 h-64 sm:w-80 sm:h-80 lg:w-[26rem] lg:h-[26rem] object-contain drop-shadow-[0_0_80px_rgba(224,123,57,0.45)]"
+              className="w-80 h-80 sm:w-96 sm:h-96 lg:w-[32rem] lg:h-[32rem] object-contain drop-shadow-[0_0_80px_rgba(224,123,57,0.45)]"
             />
           </motion.div>
 
@@ -154,7 +154,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="flex items-end justify-center gap-6 sm:gap-10 lg:gap-14 mb-10 w-full mt-[-2rem]"
+            className="flex items-end justify-center gap-6 sm:gap-10 lg:gap-14 mb-10 w-full mt-8"
           >
             {saftyProducts.map((product, index) => (
               <motion.div
